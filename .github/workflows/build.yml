@@ -1,24 +1,30 @@
 name: Build Fabric jar
+
 on:
   workflow_dispatch:
   push:
     branches: ['26.3']
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: 25
+
       - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: 9.6.0
+
       - name: Build
-        run: |
-          chmod +x gradlew
-          ./gradlew :fabric:jar --no-daemon
+        run: gradle :fabric:jar --no-daemon
+
       - uses: actions/upload-artifact@v4
         with:
           name: revertzombiereinforcement-fabric-26.3
           path: fabric/build/libs/*.jar
-          if-no-files-found: errora
+          if-no-files-found: error
